@@ -4,7 +4,16 @@ import fs from "node:fs";
 
 //
 (async () => {
+  const arch = process.arch;
+  const platform = process.platform === 'darwin' ?
+    "macos" :
+    process.platform === 'linux' ?
+    "linux" :
+    process.platform === 'win32' ?
+    "win" :
+    null;
   let extension = "";
+  
   if (process.platform === "win32") {
     extension = ".exe";
   }
@@ -17,12 +26,7 @@ import fs from "node:fs";
   }
 
   for (const target of [
-    "node18-macos-arm64",
-    //   "node18-macos-x64",
-    //   "node18-linux-arm64",
-    //   "node18-linux-x64",
-    //   "node18-win-arm64",
-    //   "node18-win-x64",
+    `node18-${platform}-${arch}`,
   ]) {
     try {
       await exec([

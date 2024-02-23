@@ -3,7 +3,7 @@
   "private": true,
   "version": "0.0.0",
   "scripts": {
-    "build": "tauri build",
+    "build": "nuxi prepare && tauri build",
     "build:app": "npm run build:chat && npm run build:gui",
     "build:chat": "tsx scripts/build.ts",
     "build:gui": "nuxi build",

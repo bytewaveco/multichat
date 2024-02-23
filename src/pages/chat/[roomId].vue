@@ -15,7 +15,7 @@
           'py-1': true,
           'rounded-md': true,
           'box-border': true,
-          'self-end rounded-br-none bg-gray-800': chat.user_id === $me?.id,
+          'self-end rounded-br-none bg-gray-200 dark:bg-gray-800': chat.user_id === $me?.id,
           'rounded-bl-none bg-gray-700': chat.user_id !== $me?.id,
         }"
       >

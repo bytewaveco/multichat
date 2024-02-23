@@ -3,7 +3,7 @@
     "beforeDevCommand": "npm run build:chat && npm run dev:gui",
     "beforeBuildCommand": "npm run build:app",
     "devPath": "http://localhost:3000",
-    "distDir": "../.output",
+    "distDir": "../dist",
     "withGlobalTauri": true
   },
   "package": {
@@ -41,7 +41,8 @@
       {
         "title": "MultiChat",
         "width": 1200,
-        "height": 800
+        "height": 800,
+        "minWidth": 520
       }
     ],
     "security": {

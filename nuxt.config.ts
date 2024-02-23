@@ -3,6 +3,12 @@ export default defineNuxtConfig({
   devtools: { enabled: true },
   telemetry: false,
   ssr: false,
-  srcDir: 'src',
-  modules: ['@nuxt/ui']
-})
+  srcDir: "src",
+  modules: ["@nuxt/ui"],
+  nitro: {
+    preset: "static",
+  },
+  colorMode: {
+    preference: 'light'
+  }
+});

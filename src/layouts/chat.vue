@@ -22,14 +22,17 @@
           'border-solid': true,
           'border-gray-100': true,
           rounded: true,
-          'hover:bg-gray-800': true,
-          'bg-gray-800': route.params.roomId === room.id,
+          'hover:bg-gray-100': true,
+          'dark:hover:bg-gray-800': true,
+          'bg-gray-200': route.params.roomId === room.id,
+          'dark:bg-gray-800': route.params.roomId === room.id,
           'box-border': true,
           'transition-colors': true,
           'cursor-pointer': true,
+          'user-select-none': true,
         }"
       >
-        {{ room.name }}
+        <span class="truncate whitespace-nowrap">{{ room.name }}</span>
         <span class="text-xs truncate w-[calc(256px_-_1.25rem)]">
           {{ latest[room.id] ?? "✨ No chat history." }}
         </span>
@@ -37,7 +40,7 @@
     </div>
   </div>
   <div
-    class="fixed top-0 right-0 h-10 px-4 rounded-bl-md flex gap-x-4 box-border items-center bg-gray-800/60 z-10"
+    class="fixed top-0 right-0 h-10 px-4 rounded-bl-md flex gap-x-4 box-border items-center bg-gray-200/60 dark:bg-gray-800/60  z-10"
   >
     <u-button
       :padded="false"
@@ -63,7 +66,7 @@
   </div>
   <div
     v-if="room"
-    class="fixed top-0 left-[272px] h-10 px-4 rounded-b-md flex gap-x-4 box-border items-center bg-gray-800/60 z-10"
+    class="fixed top-0 left-[272px] h-10 px-4 rounded-b-md flex gap-x-4 box-border items-center bg-gray-200/60 dark:bg-gray-800/60 z-10"
   >
     <u-icon
       name="i-heroicons-signal"
@@ -72,7 +75,7 @@
         'text-red-500': $ws.readyState !== 1,
       }"
     />
-    <h6 class="text-xs">{{ room.name }}</h6>
+    <h6 class="text-xs truncate whitespace-nowrap max-w-fit min-w-0">{{ room.name }}</h6>
     <h6 class="text-xs text-gray-500 tabular-nums">
       {{ room.address }}:{{ room.port }}
     </h6>
