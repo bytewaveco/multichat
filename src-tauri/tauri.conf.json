@@ -1,0 +1,64 @@
+{
+  "build": {
+    "beforeDevCommand": "npm run build:chat && npm run dev:gui",
+    "beforeBuildCommand": "npm run build:app",
+    "devPath": "http://localhost:3000",
+    "distDir": "../.output",
+    "withGlobalTauri": true
+  },
+  "package": {
+    "productName": "MultiChat Client",
+    "version": "0.0.0"
+  },
+  "tauri": {
+    "allowlist": {
+      "all": false,
+      "shell": {
+        "all": false,
+        "open": true,
+        "sidecar": true,
+        "scope": [
+          {
+            "name": "bin/MultiChat",
+            "sidecar": true,
+            "args": [
+              "-d",
+              {
+                "validator": "\\S+"
+              }
+            ]
+          }
+        ]
+      },
+      "fs": {
+        "all": true
+      },
+      "path": {
+        "all": true
+      }
+    },
+    "windows": [
+      {
+        "title": "MultiChat",
+        "width": 1200,
+        "height": 800
+      }
+    ],
+    "security": {
+      "csp": null
+    },
+    "bundle": {
+      "active": true,
+      "targets": "all",
+      "identifier": "com.bytewave.multichat",
+      "icon": [
+        "icons/32x32.png",
+        "icons/128x128.png",
+        "icons/128x128@2x.png",
+        "icons/icon.icns",
+        "icons/icon.ico"
+      ],
+      "externalBin": ["bin/MultiChat"]
+    }
+  }
+}
