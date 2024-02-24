@@ -73,6 +73,16 @@ function setupDb() {
   console.log("[MultiChat]: done");
 }
 
+function send(socket, address, port, message) {
+  const buffer = Buffer.from(message);
+
+  socket.send(buffer, 0, buffer.length, port, address, (err) => {
+    if (err) {
+      console.error(err);
+    }
+  });
+}
+
 function setupWss() {
   console.log("[MultiChat]: Initializing wss...");
 
@@ -123,27 +133,20 @@ function setupWss() {
         } else if (json.type === "chat") {
           const { address, port, ...rest } = json;
 
-          servers[`${address}:${port}`].send(
-            Buffer.from(JSON.stringify(rest)),
+          send(
+            servers[`${address}:${port}`],
+            address,
             port,
-            address
+            JSON.stringify(rest)
           );
         } else if (json.type === "chat:update") {
           const { address, port, ...rest } = json;
 
-          servers[defaultServerKey].send(
-            Buffer.from(JSON.stringify(rest)),
-            port,
-            address
-          );
+          send(servers[defaultServerKey], address, port, JSON.stringify(rest));
         } else if (json.type === "chat:delete") {
           const { address, port, ...rest } = json;
 
-          servers[defaultServerKey].send(
-            Buffer.from(JSON.stringify(rest)),
-            port,
-            address
-          );
+          send(servers[defaultServerKey], address, port, JSON.stringify(rest));
         } else if (json.type === "chat:all") {
           const chats = sqlite
             .prepare(`select * from chat order by created_at desc;`)
@@ -153,39 +156,30 @@ function setupWss() {
         } else if (json.type === "user") {
           const { address, port, ...rest } = json;
 
-          servers[defaultServerKey].send(
-            Buffer.from(JSON.stringify(rest)),
-            port,
-            address
-          );
+          send(servers[defaultServerKey], address, port, JSON.stringify(rest));
         } else if (json.type === "user:update") {
           const { address, port, ...rest } = json;
 
-          servers[defaultServerKey].send(
-            Buffer.from(JSON.stringify(rest)),
-            port,
-            address
-          );
+          send(servers[defaultServerKey], address, port, JSON.stringify(rest));
         } else if (json.type === "user:delete") {
           const { address, port, ...rest } = json;
 
-          servers[defaultServerKey].send(
-            Buffer.from(JSON.stringify(rest)),
-            port,
-            address
-          );
+          send(servers[defaultServerKey], address, port, JSON.stringify(rest));
         } else if (json.type === "user:all") {
           const users = sqlite.prepare(`select * from users;`).all();
 
           ws.send(JSON.stringify({ type: "user:all", data: users }));
         } else if (json.type === "room") {
-          servers[defaultServerKey].send(
-            Buffer.from(data),
+          send(
+            servers[defaultServerKey],
+            defaultServerAddress,
             defaultServerPort,
-            defaultServerAddress
+            data
           );
         } else if (json.type === "room:all") {
-          const rooms = sqlite.prepare(`select * from room order by created_at asc;`).all();
+          const rooms = sqlite
+            .prepare(`select * from room order by created_at asc;`)
+            .all();
 
           ws.send(JSON.stringify({ type: "room:all", data: rooms }));
         } else if (json.type === "cache:clear") {
@@ -235,7 +229,7 @@ function setupServer(address = defaultServerAddress, port = defaultServerPort) {
 
   servers[serverKey].on("message", (msg, rinfo) => {
     try {
-      const json = JSON.parse(msg);
+      const json = JSON.parse(msg.toString());
 
       console.log("[server]:", serverKey, json);
 
@@ -312,7 +306,9 @@ function setupServer(address = defaultServerAddress, port = defaultServerPort) {
 
           setupServer(address, port);
 
-          const rooms = sqlite.prepare(`select * from room order by created_at asc;`).all();
+          const rooms = sqlite
+            .prepare(`select * from room order by created_at asc;`)
+            .all();
 
           wss.clients.forEach((client) => {
             if (client.readyState === WebSocket.OPEN) {
